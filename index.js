@@ -79,6 +79,13 @@ async function run() {
               );
         })
 
+        app.delete('/deletetoy/:id', async (req, res) => {
+            const _id = req.params.id;
+            const filter = {_id: new ObjectId(_id)}
+            const result = await toys.deleteOne(filter);
+            res.send(result);
+        })
+
         const categories = client.db('UltimateToyVerse').collection('categories');
 
         app.get('/categories', async (req, res) => {
