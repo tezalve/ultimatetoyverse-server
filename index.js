@@ -38,7 +38,6 @@ async function run() {
         app.get('/toydetails/:id', async (req, res) => {
             const id = new ObjectId(req.params.id);
             const result = await toys.findOne({ _id: id});
-            console.log(result, id);
             res.send(result);
         })
 
@@ -46,15 +45,38 @@ async function run() {
             const email = atob(req.params.email);
             const cursor = toys.find({ seller_email: email});
             const result = await cursor.toArray();
-            console.log(result, email);
             res.send(result);
         })
 
         app.post('/addtoy', async(req, res)=>{
             const doc = req.body;
-            console.log('new toy: ', doc);
             const result = await toys.insertOne(doc);
             res.send(result);
+        })
+
+        app.put('/updatetoy', async(req, res)=>{
+            const doc = req.body;
+            const filter = {_id: new ObjectId(doc._id)};
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: {
+                  picture: doc.picture,
+                  toy_name: doc.toy_name,
+                  seller_name: doc.seller_name,
+                  seller_email: doc.seller_email,
+                  price: doc.price,
+                  rating: doc.rating,
+                  available_quantity: doc.available_quantity,
+                  category: doc.category,
+                  detail_description: doc.detail_description
+                },
+              };
+            console.log('updated toy: ', updateDoc);
+            const result = await toys.updateOne(filter, updateDoc, options);
+            res.send(result);
+            console.log(
+                `${result.matchedCount} document(s) matched the filter, updated ${result.modifiedCount} document(s)`,
+              );
         })
 
         const categories = client.db('UltimateToyVerse').collection('categories');
