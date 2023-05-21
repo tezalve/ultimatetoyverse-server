@@ -15,7 +15,7 @@ app.use(cors(corsConfig))
 app.options("", cors(corsConfig))
 app.use(express.json());
 
-const uri = `mongodb+srv://tezalve:GpSt8rpnhIP1r9eV@cluster0.vvdmedc.mongodb.net/?retryWrites=true&w=majority`;
+const uri = `mongodb+srv://${process.env.USER}:${process.env.PASS}@cluster0.vvdmedc.mongodb.net/?retryWrites=true&w=majority`;
 
 console.log(uri);
 
